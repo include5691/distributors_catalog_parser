@@ -1,6 +1,6 @@
 import logging
 from csv import DictWriter
-from ._product import Product
+from .products import Product
 
 def write_csv(products: list[Product]) -> None:
     with open("products.csv", "w", newline="") as file:
