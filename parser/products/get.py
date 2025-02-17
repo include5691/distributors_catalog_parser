@@ -26,25 +26,28 @@ def get_product(url: str) -> Product | None:
             images.append(KSIZE_URL + img_tag["src"])
     return Product(name=name, short_description=short_description, images=images)
 
-def get_products(url: str) -> list[Product] | None:
+def get_products(url: str, limit: int | None = None) -> list[Product] | None:
     "Get product by products page"
-    html_content = get_html(url)
-    if html_content is None:
-        return None
-    group_soup = BeautifulSoup(html_content, "html.parser")
-    products_group = group_soup.find("div", class_="s-catalog-groups s-catalog-groups_layout_grid js-nomenclatures")
-    if not products_group:
-        logging.error(f"Products group not found for url {url}")
-        return None
-    products_soup = BeautifulSoup(str(products_group), "html.parser")
-    products_items = products_soup.find_all("a", class_="s-catalog-groups__link")
-    if not products_items:
-        logging.error(f"Products not found for url {url}")
-        return None
     products = []
-    for item in products_items:
-        product_url = KSIZE_URL + item["href"]
-        product = get_product(product_url)
-        if product:
-            products.append(product)
-    return products
+    i = 1
+    while True:
+        html_content = get_html(url + f"?page={i}")
+        if html_content is None:
+            break
+        group_soup = BeautifulSoup(html_content, "html.parser")
+        products_group = group_soup.find("div", class_="s-catalog-groups s-catalog-groups_layout_grid js-nomenclatures")
+        if not products_group:
+            break
+        products_soup = BeautifulSoup(str(products_group), "html.parser")
+        products_items = products_soup.find_all("a", class_="s-catalog-groups__link")
+        if not products_items:
+            break
+        for item in products_items:
+            product_url = KSIZE_URL + item["href"]
+            product = get_product(product_url)
+            if product:
+                products.append(product)
+            if limit and len(products) >= limit:
+                return products
+        i += 1
+    return products if products else None
