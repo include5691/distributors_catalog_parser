@@ -1,5 +1,4 @@
 import logging
-from bs4 import BeautifulSoup
 from .model import Product
 from .._soup import get_soup
 from .._common import KSIZE_URL
@@ -34,12 +33,12 @@ def get_product(url: str) -> Product | None:
             images.append(KSIZE_URL + img_tag["src"])
 
     attributes = {}
-    info_block = soup.find("div", class_="s-nomenclature__attributes s-nomenclature__information")
+    info_block = soup.find("div", class_="js-nomenclature_block")
     if info_block:
-        items = info_block.find_all("li", class_="s-nomenclature__attr-item")
-        for li in items:
-            name_tag = li.find("span", class_="s-nomenclature__attr-name")
-            value_tag = li.find("span", class_="s-nomenclature__attr-value")
+        items = info_block.find_all("tr")
+        for tr in items:
+            name_tag = tr.find("th")
+            value_tag = tr.find("td")
             if name_tag and value_tag:
                 attr_name = name_tag.get_text(strip=True)
                 attr_value = value_tag.get_text(strip=True)
