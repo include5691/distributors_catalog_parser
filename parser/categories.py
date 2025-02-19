@@ -1,16 +1,17 @@
 import logging
-from bs4 import BeautifulSoup
-from ._html import get_html
+from ._soup import get_soup
 from ._common import KSIZE_URL
 
 def get_subcategories(url: str) -> list[str] | None:
-    html_content = get_html(url)
-    if html_content is None:
+    soup = get_soup(url)
+    if soup is None:
+        logging.error(f"Soup not found for url {url}")
         return None
-    menu_soup = BeautifulSoup(html_content, "html.parser")
-    subcategories_menu = menu_soup.find("div", class_="category-panel")
-    subcategories_soup = BeautifulSoup(str(subcategories_menu), "html.parser")
-    subcategories_items = subcategories_soup.find_all("span")
+    subcategories_menu = soup.find("div", class_="category-panel")
+    if not subcategories_menu:
+        logging.error(f"Subcategories menu not found for url {url}")
+        return None
+    subcategories_items = subcategories_menu.find_all("span")
     if not subcategories_items:
         logging.error(f"Subcategories not found for url {url}")
         return None

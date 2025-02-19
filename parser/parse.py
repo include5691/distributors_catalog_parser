@@ -10,12 +10,12 @@ def parse_caregory(url: str):
         return None
     products = []
     for subcategory in subcategories:
+        print(subcategory)
         result = get_products(subcategory)
         if result:
             products.extend(result)
     if not products:
         logging.error(f"Products not found for url {url}")
         return None
-    print(len(products))
     write_csv(products)
     logging.info(f"Category {url} parsed successfully")
