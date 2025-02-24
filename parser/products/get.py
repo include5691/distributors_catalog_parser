@@ -12,26 +12,22 @@ def get_product(url: str) -> Product | None:
     if not title_tag:
         logging.error(f"Title not found for url {url}")
     name = title_tag.get_text(strip=True)
-
     short_description = None
     short_description_tag = soup.find("div", class_="s-nomenclature__main-attr-first")
     if short_description_tag:
         short_description_li_tag = short_description_tag.find("li", class_="s-nomenclature__main-attr")
         if short_description_li_tag:
             short_description = short_description_li_tag.get_text(strip=True)
-
     description = None
     description_tag = soup.find("div", itemprop="description")
     if description_tag:
         description = short_description_tag.get_text(strip=True)
-
     images = []
     product_items = soup.find_all("div", class_="s-nomenclature__photo-item")
     for item in product_items:
         img_tag = item.find("img")
         if img_tag:
             images.append(KSIZE_URL + img_tag["src"])
-
     attributes = {}
     info_block = soup.find("div", class_="js-nomenclature_block")
     if info_block:
@@ -41,7 +37,12 @@ def get_product(url: str) -> Product | None:
             value_tag = tr.find("td")
             if name_tag and value_tag:
                 attr_name = name_tag.get_text(strip=True)
-                attr_value = value_tag.get_text(strip=True)
+                if attr_name == "Серия":
+                    continue
+                elif attr_name == "Производитель":
+                    attr_value = "Element-5"
+                else:
+                    attr_value = value_tag.get_text(strip=True)
                 attributes[attr_name] = attr_value
     return Product(name=name, short_description=short_description, description=description, images=images, attributes=attributes)
 
