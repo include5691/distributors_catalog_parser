@@ -1,4 +1,5 @@
 import logging
+from urllib.parse import urlparse
 from .categories import get_subcategories
 from .products import get_products
 from .write import write_products_csv
@@ -16,5 +17,13 @@ def parse_caregory(url: str):
     if not products:
         logging.error(f"Products not found for url {url}")
         return None
-    write_products_csv(products)
-    logging.info(f"Category {url} parsed successfully")
+    parsed_url = urlparse(url)
+    write_products_csv(products, file_name=parsed_url.path.replace("/", ""))
+
+def parse_subcategory(url: str):
+    products = get_products(url)
+    if not products:
+        logging.error(f"Products not found for url {url}")
+        return None
+    parsed_url = urlparse(url)
+    write_products_csv(products, file_name=parsed_url.path.replace("/", ""))

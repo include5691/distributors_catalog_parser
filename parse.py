@@ -9,3 +9,4 @@ from parser import parse_caregory
 url = "https://ksize.ru/shtatnye-golovnye-ustroystva-dlya-audi"
 
 parse_caregory(url)
+logging.info("Parsing completed")

@@ -1,4 +1,6 @@
+import os
 import logging
+from e5nlp import make_gpt_request
 from .model import Product
 from .._soup import get_soup
 from .._common import KSIZE_URL
@@ -18,10 +20,15 @@ def get_product(url: str) -> Product | None:
         short_description_li_tag = short_description_tag.find("li", class_="s-nomenclature__main-attr")
         if short_description_li_tag:
             short_description = ' '.join(short_description_li_tag.get_text(strip=True).replace("<br>", "\n").split()).replace("Wide Media", "MyDisplay")
+        short_description = short_description.replace('"', '')
     description = None
     description_tag = soup.find("div", itemprop="description")
     if description_tag:
         description = ' '.join(description_tag.get_text(strip=True).replace("<br>", "\n").split()).replace("Wide Media", "MyDisplay")
+        ai_generated_description = make_gpt_request(text=description, prompt=os.getenv("DESCRIPTION_PROMPT"), model_name=os.getenv("OPENAI_MODEL_NAME"))
+        if ai_generated_description:
+            description = ai_generated_description
+        description = description.replace('"', '')
     images = []
     product_items = soup.find_all("div", class_="s-nomenclature__photo-item")
     for item in product_items:
