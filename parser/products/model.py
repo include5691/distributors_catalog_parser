@@ -16,6 +16,10 @@ class Product(BaseModel):
             'Images': ", ".join(self.images) if self.images else "",
         }
         attributes_json = {}
-        for i, (key, value) in enumerate(self.attributes.items()):
-            attributes_json.update({f"Attribute {i + 1} name": key, f"Attribute {i + 1} value": value, f"Attribute {i + 1} visible": 1, f"Attribute {i + 1} global": 1})
+        i = 1
+        for key, value in self.attributes.items():
+            if len(key) > 22:
+                continue
+            attributes_json.update({f"Attribute {i + 1} name": key, f"Attribute {i + 1} value(s)": value, f"Attribute {i + 1} visible": 1, f"Attribute {i + 1} global": 1})
+            i += 1
         return {**base_json, **attributes_json}

@@ -10,7 +10,6 @@ def parse_caregory(url: str):
         return None
     products = []
     for subcategory in subcategories:
-        print(subcategory)
         result = get_products(subcategory)
         if result:
             products.extend(result)

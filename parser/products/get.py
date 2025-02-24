@@ -17,11 +17,11 @@ def get_product(url: str) -> Product | None:
     if short_description_tag:
         short_description_li_tag = short_description_tag.find("li", class_="s-nomenclature__main-attr")
         if short_description_li_tag:
-            short_description = short_description_li_tag.get_text(strip=True)
+            short_description = ' '.join(short_description_li_tag.get_text(strip=True).replace("<br>", "\n").split()).replace("Wide Media", "MyDisplay")
     description = None
     description_tag = soup.find("div", itemprop="description")
     if description_tag:
-        description = short_description_tag.get_text(strip=True)
+        description = ' '.join(description_tag.get_text(strip=True).replace("<br>", "\n").split()).replace("Wide Media", "MyDisplay")
     images = []
     product_items = soup.find_all("div", class_="s-nomenclature__photo-item")
     for item in product_items:
@@ -36,13 +36,17 @@ def get_product(url: str) -> Product | None:
             name_tag = tr.find("th")
             value_tag = tr.find("td")
             if name_tag and value_tag:
+                value = value_tag.get_text(strip=True)
                 attr_name = name_tag.get_text(strip=True)
                 if attr_name == "Серия":
                     continue
                 elif attr_name == "Производитель":
-                    attr_value = "Element-5"
+                    name = name.split(value)[0]
+                    description = description.replace(value, "MyDisplay")
+                    short_description = short_description.replace(value, "MyDisplay")
+                    attr_value = "MyDisplay"
                 else:
-                    attr_value = value_tag.get_text(strip=True)
+                    attr_value = value
                 attributes[attr_name] = attr_value
     return Product(name=name, short_description=short_description, description=description, images=images, attributes=attributes)
 
