@@ -1,7 +1,7 @@
 import logging
 from .categories import get_subcategories
 from .products import get_products
-from .write import write_csv
+from .write import write_products_csv
 
 def parse_caregory(url: str):
     subcategories = get_subcategories(url)
@@ -17,5 +17,5 @@ def parse_caregory(url: str):
     if not products:
         logging.error(f"Products not found for url {url}")
         return None
-    write_csv(products)
+    write_products_csv(products)
     logging.info(f"Category {url} parsed successfully")
