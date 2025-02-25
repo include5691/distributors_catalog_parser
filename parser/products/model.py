@@ -2,6 +2,7 @@ from pydantic import BaseModel, model_serializer
 
 class Product(BaseModel):
     name: str
+    categories: str | None
     car_name: str | None
     short_description: str | None
     description: str | None
@@ -12,6 +13,7 @@ class Product(BaseModel):
     def serialize_model(self):
         base_json = {
             'Name': self.name,
+            'Categories': self.categories,
             'Short description': self.short_description if self.short_description else "",
             'Description': self.description if self.description else "",
             'Images': ", ".join(self.images) if self.images else "",
