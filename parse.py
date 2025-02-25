@@ -3,6 +3,7 @@ load_dotenv()
 
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 from parser import parse_subcategory
 
