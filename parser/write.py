@@ -8,7 +8,7 @@ def write_products_csv(products: list[Product], file_name: str) -> None:
         keys = list(product.model_dump().keys())
         if len(keys) > len(headers):
             headers = keys
-    with open(f"{file_name}.csv", "w", newline="") as file:
+    with open(file_name, "w", newline="") as file:
         writer = DictWriter(file, fieldnames=headers)
         writer.writeheader()
         for product in products:
