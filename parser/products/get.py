@@ -1,3 +1,4 @@
+import re
 import os
 import logging
 from e5nlp import make_gpt_request
@@ -48,14 +49,19 @@ def get_product(url: str) -> Product | None:
                 if attr_name == "Серия":
                     continue
                 elif attr_name == "Производитель":
-                    name = name.split(value)[0]
+                    name = name.split(value)[0].strip()
                     description = description.replace(value, "MyDisplay")
                     short_description = short_description.replace(value, "MyDisplay")
                     attr_value = "MyDisplay"
                 else:
                     attr_value = value
                 attributes[attr_name] = attr_value
-    return Product(name=name, short_description=short_description, description=description, images=images, attributes=attributes)
+    car_name = None
+    match_first_letter = re.search(r'[a-zA-Z]', name)
+    if match_first_letter:
+        car_name = name[match_first_letter.start():].strip()
+        name = "Магнитола для " + car_name
+    return Product(name=name, car_name=car_name, short_description=short_description, description=description, images=images, attributes=attributes)
 
 def get_products(url: str, limit: int | None = None) -> list[Product] | None:
     "Get product by products page"

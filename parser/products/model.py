@@ -2,6 +2,7 @@ from pydantic import BaseModel, model_serializer
 
 class Product(BaseModel):
     name: str
+    car_name: str | None
     short_description: str | None
     description: str | None
     images: list[str] | None
@@ -14,6 +15,7 @@ class Product(BaseModel):
             'Short description': self.short_description if self.short_description else "",
             'Description': self.description if self.description else "",
             'Images': ", ".join(self.images) if self.images else "",
+            'meta:car_name': self.car_name,
         }
         attributes_json = {}
         i = 1
