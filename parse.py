@@ -5,10 +5,8 @@ import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
+import os
 from parser import parse_subcategory
 
-url = "https://ksize.ru/shtatnye-golovnye-ustroystva-dlya-audi"
-categories = "Автомагнитолы > Штатные автомагнитолы > Автомагнитолы Audi"
-
-parse_subcategory(url, categories)
+parse_subcategory(os.getenv("SUBCATEGORY_URL"), os.getenv("CATEGORIES_PATH"))
 logging.info("Parsing completed")

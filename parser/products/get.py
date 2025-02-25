@@ -6,7 +6,7 @@ from .model import Product
 from .._soup import get_soup
 from .._common import KSIZE_URL
 
-def get_product(url: str, categories: str) -> Product | None:
+def get_product(url: str, categories_path: str | None = None) -> Product | None:
     "Get product by direct link"
     soup = get_soup(url)
     if not soup:
@@ -61,9 +61,9 @@ def get_product(url: str, categories: str) -> Product | None:
     if match_first_letter:
         car_name = name[match_first_letter.start():].strip()
         name = "Магнитола для " + car_name
-    return Product(name=name, categories=categories, car_name=car_name, short_description=short_description, description=description, images=images, attributes=attributes)
+    return Product(name=name, categories_path=categories_path, car_name=car_name, short_description=short_description, description=description, images=images, attributes=attributes)
 
-def get_products(url: str, categories: str, limit: int | None = None) -> list[Product] | None:
+def get_products(url: str, categories_path: str | None = None, limit: int | None = None) -> list[Product] | None:
     "Get product by products page"
     products = []
     i = 1
@@ -79,7 +79,7 @@ def get_products(url: str, categories: str, limit: int | None = None) -> list[Pr
             break
         for item in products_items:
             product_url = KSIZE_URL + item["href"]
-            product = get_product(product_url, categories)
+            product = get_product(product_url, categories_path)
             if product:
                 products.append(product)
             if limit and len(products) >= limit:

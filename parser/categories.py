@@ -2,7 +2,7 @@ import logging
 from ._soup import get_soup
 from ._common import KSIZE_URL
 
-def get_subcategories(url: str) -> list[str] | None:
+def get_subcategories_urls(url: str) -> list[str] | None:
     soup = get_soup(url)
     if soup is None:
         logging.error(f"Soup not found for url {url}")
