@@ -50,8 +50,10 @@ def get_product(url: str, categories_path: str | None = None) -> Product | None:
                     continue
                 elif attr_name == "Производитель":
                     name = name.split(value)[0].strip()
-                    description = description.replace(value, "MyDisplay")
-                    short_description = short_description.replace(value, "MyDisplay")
+                    if description:
+                        description = description.replace(value, "MyDisplay")
+                    if short_description:
+                        short_description = short_description.replace(value, "MyDisplay")
                     attr_value = "MyDisplay"
                 else:
                     attr_value = value

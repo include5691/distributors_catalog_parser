@@ -5,6 +5,8 @@ from .categories import get_subcategories_urls
 from .products import get_products
 from .write import write_products_csv
 
+PRODUCTS_PER_FILE=12
+
 def _get_dir_path(url: str) -> Path:
     parsed_url = urlparse(url)
     return Path(str(Path(__file__).parent.parent / "csv_files") + f"/{parsed_url.path.split("-")[-1]}")
@@ -28,6 +30,6 @@ def parse_subcategory(url: str, categories_path: str | None = None):
     dir_path = _get_dir_path(url)
     if not dir_path.exists():
         dir_path.mkdir(parents=True)
-    for n in range(len(products) // 15 + 1):
-        write_products_csv(products[n*15:(n+1)*15], file_name=str(dir_path) + f"{dir_path.name}_{n}.csv")
+    for n in range(len(products) // PRODUCTS_PER_FILE + 1):
+        write_products_csv(products[n*PRODUCTS_PER_FILE:(n+1)*PRODUCTS_PER_FILE], file_name=str(dir_path) + f"/{dir_path.name}_{n}.csv")
     logging.info(f"Subcategory {url} parsed")
