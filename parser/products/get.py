@@ -21,7 +21,7 @@ def get_product(url: str, categories_path: str | None = None) -> Product | None:
         short_description_li_tag = short_description_tag.find("li", class_="s-nomenclature__main-attr")
         if short_description_li_tag:
             short_description = ' '.join(short_description_li_tag.get_text(strip=True).replace("<br>", "\n").split()).replace("Wide Media", "MyDisplay")
-        short_description = short_description.replace('"', '')
+            short_description = short_description.replace('"', '')
     description = None
     description_tag = soup.find("div", itemprop="description")
     if description_tag:
@@ -29,7 +29,7 @@ def get_product(url: str, categories_path: str | None = None) -> Product | None:
         ai_generated_description = make_gpt_request(text=description, prompt=os.getenv("DESCRIPTION_PROMPT"), model_name=os.getenv("OPENAI_MODEL_NAME"))
         if ai_generated_description:
             description = ai_generated_description
-        description = description.replace('"', '')
+            description = description.replace('"', '')
     images = []
     product_items = soup.find_all("div", class_="s-nomenclature__photo-item")
     for item in product_items:

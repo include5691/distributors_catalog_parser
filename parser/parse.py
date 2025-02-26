@@ -1,13 +1,13 @@
 import logging
-import pathlib
+from pathlib import Path
 from urllib.parse import urlparse
 from .categories import get_subcategories_urls
 from .products import get_products
 from .write import write_products_csv
 
-def _get_dir_path(url: str) -> pathlib.Path:
+def _get_dir_path(url: str) -> Path:
     parsed_url = urlparse(url)
-    dir_path = pathlib.Path(__file__).parent.parent / "csv_files" / parsed_url.path.split("-")[-1]
+    return Path(str(Path(__file__).parent.parent / "csv_files") + f"/{parsed_url.path.split("-")[-1]}")
 
 def parse_caregory(url: str):
     subcategories = get_subcategories_urls(url)
@@ -20,6 +20,7 @@ def parse_caregory(url: str):
             parse_subcategory(subcategory)
 
 def parse_subcategory(url: str, categories_path: str | None = None):
+    logging.info(f"Parsing subcategory {url}")
     products = get_products(url, categories_path)
     if not products:
         logging.error(f"Products not found for url {url}")
@@ -29,3 +30,4 @@ def parse_subcategory(url: str, categories_path: str | None = None):
         dir_path.mkdir(parents=True)
     for n in range(len(products) // 15 + 1):
         write_products_csv(products[n*15:(n+1)*15], file_name=str(dir_path) + f"{dir_path.name}_{n}.csv")
+    logging.info(f"Subcategory {url} parsed")
