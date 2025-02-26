@@ -1,1 +1,1 @@
-from .parse import parse_subcategory, parse_caregory
+from .process import process_subcategory, process_caregory
