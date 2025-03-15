@@ -1,2 +1,2 @@
-# e5_catalog_parser
+# ksize_catalog_parser
 Product catalog parser
