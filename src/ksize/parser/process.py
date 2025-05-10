@@ -6,11 +6,14 @@ from .categories import get_subcategories_urls
 from .products import get_products
 from .write import write_products_csv
 
-PRODUCTS_PER_FILE=12
 
 def _get_dir_path(url: str) -> Path:
     parsed_url = urlparse(url)
-    return Path(str(Path(__file__).parent.parent / "csv_files") + f"/{parsed_url.path.split("dlya")[-1][1:]}")
+    return Path(
+        str(Path(__file__).parent.parent / "csv_files")
+        + f"/{parsed_url.path.split("dlya")[-1][1:]}"
+    )
+
 
 def process_caregory(url: str):
     subcategories = get_subcategories_urls(url)
@@ -21,7 +24,13 @@ def process_caregory(url: str):
         dir_path = _get_dir_path(subcategory)
         if not dir_path.exists():
             car_category_name = dir_path.name.replace("-", " ").strip()
-            process_subcategory(subcategory, categories_path=os.getenv("CATEGORIES_PATH") + car_category_name)
+            process_subcategory(
+                subcategory,
+                categories_path=os.getenv("CATEGORIES_PATH").format(
+                    car_category_name=car_category_name.upper()
+                ),
+            )
+
 
 def process_subcategory(url: str, categories_path: str | None = None):
     logging.info(f"Parsing subcategory {url}")
@@ -33,5 +42,7 @@ def process_subcategory(url: str, categories_path: str | None = None):
     if not dir_path.exists():
         dir_path.mkdir(parents=True)
     for i, product in enumerate(products):
-        write_products_csv([product], file_name=str(dir_path) + f"/{dir_path.name}_{i}.csv")
+        write_products_csv(
+            [product], file_name=str(dir_path) + f"/{dir_path.name}_{i}.csv"
+        )
     logging.info(f"Subcategory {url} parsed")
