@@ -1,6 +1,6 @@
 import logging
-from ._soup import get_soup
-from ._common import KSIZE_URL
+from src.soup import get_soup
+from src.common import KSIZE_URL
 
 def get_subcategories_urls(url: str) -> list[str] | None:
     soup = get_soup(url)

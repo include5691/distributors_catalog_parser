@@ -3,9 +3,9 @@ import os
 import logging
 from e5nlp import make_gpt_request
 from au_b24 import notify_user
-from .schemas import Product
-from .._soup import get_soup
-from .._common import KSIZE_URL, DESCRIPTION_PROMPT
+from src.soup import get_soup
+from src.schemas import Product
+from src.common import KSIZE_URL, DESCRIPTION_PROMPT
 
 DISTRIBUTOR_NAME = os.getenv("DISTRIBUTOR_NAME")
 
@@ -122,4 +122,4 @@ def get_products(
             if limit and len(products) >= limit:
                 return products
         i += 1
-    return products if products else None
+    return products

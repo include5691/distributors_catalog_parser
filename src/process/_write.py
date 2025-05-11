@@ -1,6 +1,6 @@
 import logging
 from csv import DictWriter
-from .products import Product
+from ..schemas import Product
 
 def write_products_csv(products: list[Product], file_name: str) -> None:
     headers = []
