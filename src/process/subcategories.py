@@ -23,9 +23,13 @@ def process_subcategory(url: str, categories_path: str, get_products_func: calla
 
 def _get_dir_path(url: str) -> Path:
     parsed_url = urlparse(url)
+    path = parsed_url.path.split("/")[-1]
+    path = path.replace("magnitoly-","")
+    if "dlya" in path:
+        path = path.split("dlya")[-1][1:]
     return Path(
         str(Path(__file__).parent / "csv_files")
-        + f"/{parsed_url.path.split("dlya")[-1][1:]}"
+        + f"/{path}"
     )
 
 

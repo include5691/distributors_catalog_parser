@@ -21,5 +21,7 @@ def get_subcategories_urls(url: str) -> list[str] | None:
     subcategories = []
     for brand_option in brand_select_tag.find_all("option"):
         brand_value_slug = brand_option.get("value")
+        if brand_value_slug == "no-select":
+            continue
         subcategories.append(f"{CARSMART_URL}/collection/{brand_value_slug}")
     return subcategories

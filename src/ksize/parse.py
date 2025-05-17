@@ -14,5 +14,5 @@ subcategories = get_subcategories_urls(url)
 if not subcategories:
     logging.error(f"Subcategories not found for url {url}")
     exit
-process_subcategories(subcategories)
+process_subcategories(subcategories, get_products)
 logging.info("Parsing completed")

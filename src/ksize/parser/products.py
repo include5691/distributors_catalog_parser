@@ -1,13 +1,15 @@
 import re
-import os
 import logging
 from e5nlp import make_gpt_request
 from au_b24 import notify_user
 from src.soup import get_soup
 from src.schemas import Product
-from src.common import KSIZE_URL, DESCRIPTION_PROMPT
-
-DISTRIBUTOR_NAME = os.getenv("DISTRIBUTOR_NAME")
+from src.common import (
+    KSIZE_URL,
+    KSIZE_DESCRIPTION_PROMPT,
+    DISTRIBUTOR_NAME,
+    OPENAI_MODEL_NAME,
+)
 
 
 def get_product(url: str, categories_path: str | None = None) -> Product | None:
@@ -62,17 +64,17 @@ def get_product(url: str, categories_path: str | None = None) -> Product | None:
         ).replace("Wide Media", DISTRIBUTOR_NAME)
         ai_generated_description = make_gpt_request(
             text=name + description + str(attributes),
-            prompt=DESCRIPTION_PROMPT,
-            model_name=os.getenv("OPENAI_MODEL_NAME"),
+            prompt=KSIZE_DESCRIPTION_PROMPT,
+            model_name=OPENAI_MODEL_NAME,
         )
         if not ai_generated_description:
-            logging.error(
-                f"AI generated description not found for url {url}"
-            )
+            logging.error(f"AI generated description not found for url {url}")
             notify_user(16306, f"AI generated description not found for url {url}")
             exit()
         description = ai_generated_description
-        description = description.replace('"', "").replace("Wide Media", DISTRIBUTOR_NAME)
+        description = description.replace('"', "").replace(
+            "Wide Media", DISTRIBUTOR_NAME
+        )
     images = []
     product_items = soup.find_all("div", class_="s-nomenclature__photo-item")
     for item in product_items:
