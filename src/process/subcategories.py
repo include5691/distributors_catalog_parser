@@ -28,7 +28,7 @@ def _get_dir_path(url: str) -> Path:
     if "dlya" in path:
         path = path.split("dlya")[-1][1:]
     return Path(
-        str(Path(__file__).parent / "csv_files")
+        str(Path(__file__).parent.parent / "csv_files")
         + f"/{path}"
     )
 
