@@ -9,7 +9,7 @@ import os
 from src.process import process_subcategories
 from .parser import get_subcategories_urls, get_products
 
-url = os.getenv("SUBCATEGORY_URL")
+url = os.getenv("CARSMART_SUBCATEGORY_URL")
 subcategories = get_subcategories_urls(url)
 if not subcategories:
     logging.error(f"Subcategories not found for url {url}")
