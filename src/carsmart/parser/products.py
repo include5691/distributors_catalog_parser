@@ -69,7 +69,12 @@ def parse_product(url: str, categories_path: str | None = None) -> Product | Non
 
     # car name
 
-    m = re.search(r"магнитола для\s+(.*?)\s*-\s*", name, re.I)
+    m = re.search(r"магнитола\s+для\s+(.*?)\s*-\s*", name, re.I) or re.search(
+        r"магнитола\s+(.*?)\s*-\s*", name, re.I
+    )
+    if not m:
+        logging.error(f"Car name not found in product name: {name} for url {url}")
+        return None
     car_name = m.group(1).strip()
     name = f"Магнитола для {car_name}, {name[(name.find("Android") or -1):]}"
 
