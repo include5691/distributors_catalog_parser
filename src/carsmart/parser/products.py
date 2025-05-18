@@ -51,7 +51,8 @@ def get_product_links(url: str, limit: int | None = None) -> list | None:
                     href = link_tag.get("href")
                     if href and href.startswith("/product/"):
                         full_url = CARSMART_URL + href
-                        links.append(full_url)
+                        if full_url not in links:
+                            links.append(full_url)
                         if limit and len(links) >= limit:
                             return links
         page_num += 1
